@@ -1,0 +1,18 @@
+{
+  "name": "@seven/vue-colorful",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/vur-colorful.umd.cjs",
+  "module": "./dist/vur-colorful.js",
+  "scripts": {
+    "build:watch": "vite build --watch"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/vur-colorful.js",
+      "require": "./dist/vur-colorful.umd.cjs"
+    }
+  }
+}
