@@ -11,6 +11,7 @@ module.exports = defineConfig({
     node: true,
   },
   extends: [
+    "@unocss",
     "plugin:prettier/recommended",
     "plugin:perfectionist/recommended-natural",
     "plugin:@typescript-eslint/recommended",

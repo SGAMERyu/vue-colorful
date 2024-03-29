@@ -1,6 +1,6 @@
 import type { Plugin } from "vue";
 
-import Colorful from "./Colorful.vue";
+import Colorful from "./src/components/Colorful.vue";
 
 const plugin: Plugin = {
   install(app) {
