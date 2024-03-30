@@ -1,8 +1,10 @@
 import Colorful from "@seven/vue-colorful";
+// main.ts
+import "virtual:uno.css";
+import "@unocss/reset/tailwind.css";
 import { createApp } from "vue";
 
 import App from "./App.vue";
-import "./style.css";
 
 const app = createApp(App);
 app.use(Colorful);

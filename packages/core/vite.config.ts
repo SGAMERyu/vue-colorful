@@ -39,7 +39,7 @@ export default defineConfig({
 
         return {
           code: `\
-          function __insertCSSVueSonner(code) {
+          function __insertCSSVueColorful(code) {
             if (!code || typeof document == 'undefined') return
             let head = document.head || document.getElementsByTagName('head')[0]
             let style = document.createElement('style')
@@ -47,7 +47,7 @@ export default defineConfig({
             head.appendChild(style)
             ;style.styleSheet ? (style.styleSheet.cssText = code) : style.appendChild(document.createTextNode(code))
           }\n
-          __insertCSSVueSonner(${JSON.stringify(cssCodeStr)})
+          __insertCSSVueColorful(${JSON.stringify(cssCodeStr)})
           \n ${code}`,
           map: { mappings: "" },
         };
@@ -56,7 +56,7 @@ export default defineConfig({
         const isCSS = (path: string) => /\.css$/.test(path);
         if (!isCSS(id)) return;
 
-        cssCodeStr = code;
+        cssCodeStr += code;
         return {
           code: "",
           map: { mappings: "" },

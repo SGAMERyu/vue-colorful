@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@unocss/reset':
+        specifier: ^0.58.8
+        version: 0.58.8
       vue:
         specifier: ^3.4.21
         version: 3.4.21(typescript@5.4.3)
@@ -1394,7 +1397,6 @@ packages:
 
   /@unocss/reset@0.58.8:
     resolution: {integrity: sha512-6Cz92Ryer7QpFhxnOwyauwVJfDGhCNYvLHGqW8ScIicFEPK9AUXYys/zBRCIYO2489/kckZ5EG8a3NImS5h+9w==}
-    dev: true
 
   /@unocss/rule-utils@0.58.8:
     resolution: {integrity: sha512-F7TKtTkiV9ICf8JMYO1+Eq/5zrrV7Fw966rQfHfIKrN6Vwo3tw84b5R0bLJghAFtb9UuD7q9eCfy6WBQK0d7Tw==}
