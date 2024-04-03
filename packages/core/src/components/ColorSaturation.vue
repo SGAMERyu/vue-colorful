@@ -1,5 +1,7 @@
 <template>
-  <div class="vue-colorful-saturation" :style="panelStyle"></div>
+  <div class="vue-colorful-saturation" :style="panelStyle">
+    <ColorPointer />
+  </div>
 </template>
 
 <script lang="ts" setup>

@@ -37,7 +37,7 @@ function useColorful() {
 .vue-colorful-control {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 14px;
 }
 
 .vue-colorful-control_eyedropper {

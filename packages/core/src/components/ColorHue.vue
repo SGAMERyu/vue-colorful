@@ -1,9 +1,13 @@
 <template>
-  <div class="vue-colorful-hue"></div>
+  <div class="vue-colorful-hue">
+    <ColorPointer :override-position="{ top: '50%' }" />
+  </div>
 </template>
 
 <script setup lang="ts">
-const hueValue = defineModel()
+import ColorPointer from "./ColorPointer.vue";
+
+const hueValue = defineModel();
 </script>
 
 <style>
