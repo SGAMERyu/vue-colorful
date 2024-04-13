@@ -5,9 +5,13 @@
 </template>
 
 <script setup lang="ts">
+import { watch } from "vue";
+
 import ColorPointer from "./ColorPointer.vue";
 
 const hueValue = defineModel();
+
+watch(hueValue, () => {});
 </script>
 
 <style>

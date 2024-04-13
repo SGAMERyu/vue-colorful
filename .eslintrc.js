@@ -11,7 +11,7 @@ module.exports = defineConfig({
     node: true,
   },
   extends: [
-    "@unocss",
+    "eslint:recommended",
     "plugin:prettier/recommended",
     "plugin:perfectionist/recommended-natural",
     "plugin:@typescript-eslint/recommended",
@@ -51,6 +51,13 @@ module.exports = defineConfig({
     "i/no-self-import": "error",
     "i/no-webpack-loader-syntax": "error",
     "i/order": "off",
+    "perfectionist/sort-objects": [
+      "error",
+      {
+        order: "asc",
+        type: "natural",
+      },
+    ],
     "prettier/prettier": [
       "error",
       {

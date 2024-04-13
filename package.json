@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "pnpm -C packages/example dev",
-    "build:lib": "pnpm -C packages/core build:watch"
+    "build:lib": "pnpm -C packages/core build:watch",
+    "lint": "eslint --fix --ext .ts,.vue packages/core"
   },
   "keywords": [],
   "author": "",

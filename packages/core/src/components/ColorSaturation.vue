@@ -1,11 +1,12 @@
 <template>
-  <div class="vue-colorful-saturation" :style="panelStyle">
+  <div :style="panelStyle" class="vue-colorful-saturation">
     <ColorPointer />
   </div>
 </template>
 
 <script lang="ts" setup>
 import type { CSSProperties } from "vue";
+
 import { computed } from "vue";
 
 interface Props {

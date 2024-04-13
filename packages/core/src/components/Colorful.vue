@@ -1,5 +1,5 @@
 <template>
-  <div data-vue-colorful class="vue-colorful-container">
+  <div class="vue-colorful-container" data-vue-colorful>
     <ColorSaturation :color="hueColor" />
     <div class="vue-colorful-control">
       <div class="vue-colorful-control_eyedropper">
