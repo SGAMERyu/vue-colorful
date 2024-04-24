@@ -25,6 +25,7 @@ const props = withDefaults(defineProps<Props>(), {
   overridePosition: () => ({}),
 });
 
+const pointer = defineModel();
 const { onInteractiveClick, onPointerClick, pointerStyle, refContainer } =
   usePointerMove();
 
