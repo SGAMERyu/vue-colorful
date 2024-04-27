@@ -35,11 +35,44 @@ export function convertHexToHsv(hex: string): HSVColor {
   };
 }
 
-export function convertHsvToRgba({ h, s, v }: HSVColor, a: number = 1): string {
-  const f = (n: number) => {
-    const k = (n + h / 60) % 6;
-    const p = v - v * s * Math.max(Math.min(k, 4 - k, 1), 0);
-    return Math.round(255 * p);
+export function convertHsvToRgba(hsv: HSVColor, a: number = 1): string {
+  const hsvToRgb = ({ h, s, v }: HSVColor): [number, number, number] => {
+    s = s / 100;
+    v = v / 100;
+
+    let r = 0,
+      g = 0,
+      b = 0;
+
+    const i = Math.floor(h / 60);
+    const f = h / 60 - i;
+    const p = v * (1 - s);
+    const q = v * (1 - s * f);
+    const t = v * (1 - s * (1 - f));
+
+    switch (i % 6) {
+      case 0:
+        [r, g, b] = [v, t, p];
+        break;
+      case 1:
+        [r, g, b] = [q, v, p];
+        break;
+      case 2:
+        [r, g, b] = [p, v, t];
+        break;
+      case 3:
+        [r, g, b] = [p, q, v];
+        break;
+      case 4:
+        [r, g, b] = [t, p, v];
+        break;
+      case 5:
+        [r, g, b] = [v, p, q];
+        break;
+    }
+
+    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
   };
-  return `rgba(${f(5)}, ${f(3)}, ${f(1)}, ${a})`;
+  const [r, g, b] = hsvToRgb(hsv);
+  return `rgba(${r}, ${g}, ${b}, ${a})`;
 }

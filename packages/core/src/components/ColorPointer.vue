@@ -9,20 +9,22 @@
       @mousedown="onPointerClick"
       class="vue-colorful-pointer"
     >
-      <div class="vue-colorful-fill"></div>
+      <div :style="fillStyle" class="vue-colorful-fill"></div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watchEffect } from "vue";
+import { CSSProperties, computed, ref, watch } from "vue";
 
 interface Props {
   overridePosition: Record<string, string>;
+  style: CSSProperties;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   overridePosition: () => ({}),
+  style: () => ({}),
 });
 
 const pointer = defineModel<number[]>();
@@ -34,8 +36,18 @@ const {
   refMove,
 } = usePointerMove();
 
-watchEffect(() => {
-  pointer.value = [refMove.value.left, refMove.value.top];
+watch(
+  [() => refMove.value.left, () => refMove.value.top],
+  () => {
+    pointer.value = [refMove.value.left, refMove.value.top];
+  },
+  { deep: true },
+);
+
+const fillStyle = computed(() => {
+  return {
+    ...props.style,
+  };
 });
 
 function usePointerMove() {
@@ -130,7 +142,6 @@ function usePointerMove() {
   z-index: 3;
 }
 .vue-colorful-fill {
-  background: red;
   content: "";
   position: absolute;
   left: 0;

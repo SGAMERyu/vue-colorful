@@ -1,6 +1,6 @@
 <template>
   <div :style="panelStyle" class="vue-colorful-saturation" ref="container">
-    <ColorPointer v-model="pointerValue" />
+    <ColorPointer :style="pointerStyle" v-model="pointerValue" />
   </div>
 </template>
 
@@ -10,21 +10,29 @@ import type { CSSProperties } from "vue";
 import { computed, ref, watch } from "vue";
 
 interface Props {
-  color: string;
+  saturationColor: string;
+  selectColor: string;
 }
 const props = defineProps<Props>();
-const saturationValue = defineModel<number>();
+const emits = defineEmits<{
+  (e: "change", colors: number[]): void;
+}>();
 const pointerValue = ref([]);
 
 watch(pointerValue, () => {
-  const [left] = pointerValue.value;
-  // debugger;
-  // saturationValue.value = left / 100;
+  const [left, top] = pointerValue.value;
+  emits("change", [Math.round(left), Math.round(100 - top)]);
 });
 
 const panelStyle = computed<CSSProperties>(() => {
   return {
-    backgroundColor: props.color,
+    backgroundColor: props.saturationColor,
+  };
+});
+
+const pointerStyle = computed<CSSProperties>(() => {
+  return {
+    backgroundColor: props.selectColor,
   };
 });
 </script>

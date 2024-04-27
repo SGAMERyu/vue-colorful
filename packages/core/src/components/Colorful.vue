@@ -1,6 +1,10 @@
 <template>
   <div class="vue-colorful-container" data-vue-colorful>
-    <ColorSaturation :color="hueColor" v-model="refHsv.s" />
+    <ColorSaturation
+      :saturation-color="hueColor"
+      :select-color="selectColor"
+      @change="onSaturationChange"
+    />
     <div class="vue-colorful-control">
       <div class="vue-colorful-control_eyedropper">
         <ColorEyeDropper />
@@ -13,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watchEffect } from "vue";
+import { computed, ref, watch, watchEffect } from "vue";
 
 import { convertHexToHsv, convertHsvToRgba } from "../utils/color";
 
@@ -21,11 +25,16 @@ defineOptions({
   name: "VueColorful",
 });
 const rawValue = defineModel<string>();
-const { hueColor, initRefHsv, refHsv } = useColorful();
+const { hueColor, initRefHsv, onSaturationChange, refHsv, selectColor } =
+  useColorful();
 
-watchEffect(() => {
-  initRefHsv(rawValue.value!);
-});
+watch(
+  rawValue,
+  (rawColor) => {
+    initRefHsv(rawColor!);
+  },
+  { immediate: true },
+);
 
 function useColorful() {
   const refHsv = ref({
@@ -33,16 +42,27 @@ function useColorful() {
     s: 0,
     v: 0,
   });
+  const hueColor = ref("");
 
-  const hueColor = computed(() => {
+  const selectColor = computed(() => {
+    console.warn(refHsv.value);
     return convertHsvToRgba(refHsv.value);
   });
 
   function initRefHsv(rawColor: string) {
+    console.warn("init");
     refHsv.value = convertHexToHsv(rawColor);
+    hueColor.value = convertHsvToRgba(refHsv.value);
   }
 
-  return { hueColor, initRefHsv, refHsv };
+  function onSaturationChange([s, v]: number[]) {
+    console.warn(s, "change");
+    refHsv.value.s = s;
+    refHsv.value.v = v;
+    console.warn(refHsv.value, "change");
+  }
+
+  return { hueColor, initRefHsv, onSaturationChange, refHsv, selectColor };
 }
 </script>
 
