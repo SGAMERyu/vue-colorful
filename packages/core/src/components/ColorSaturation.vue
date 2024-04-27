@@ -1,18 +1,26 @@
 <template>
-  <div :style="panelStyle" class="vue-colorful-saturation">
-    <ColorPointer />
+  <div :style="panelStyle" class="vue-colorful-saturation" ref="container">
+    <ColorPointer v-model="pointerValue" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import type { CSSProperties } from "vue";
 
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 
 interface Props {
   color: string;
 }
 const props = defineProps<Props>();
+const saturationValue = defineModel<number>();
+const pointerValue = ref([]);
+
+watch(pointerValue, () => {
+  const [left] = pointerValue.value;
+  // debugger;
+  // saturationValue.value = left / 100;
+});
 
 const panelStyle = computed<CSSProperties>(() => {
   return {

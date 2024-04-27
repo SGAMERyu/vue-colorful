@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from "vue";
+import { computed, ref, watchEffect } from "vue";
 
 interface Props {
   overridePosition: Record<string, string>;
@@ -25,24 +25,33 @@ const props = withDefaults(defineProps<Props>(), {
   overridePosition: () => ({}),
 });
 
-const pointer = defineModel();
-const { onInteractiveClick, onPointerClick, pointerStyle, refContainer } =
-  usePointerMove();
+const pointer = defineModel<number[]>();
+const {
+  onInteractiveClick,
+  onPointerClick,
+  pointerStyle,
+  refContainer,
+  refMove,
+} = usePointerMove();
+
+watchEffect(() => {
+  pointer.value = [refMove.value.left, refMove.value.top];
+});
 
 function usePointerMove() {
   const refMove = ref({
     isDrag: false,
-    left: "0%",
+    left: 0,
     startLeft: 0,
     startTop: 0,
-    top: "0%",
+    top: 0,
   });
   const refContainer = ref<HTMLElement | null>();
 
   const pointerStyle = computed(() => {
     return {
-      left: refMove.value.left,
-      top: refMove.value.top,
+      left: refMove.value.left + "%",
+      top: refMove.value.top + "%",
       ...props.overridePosition,
     };
   });
@@ -57,8 +66,8 @@ function usePointerMove() {
     xPosition = Math.max(0, Math.min(100, xPosition));
     yPosition = Math.max(0, Math.min(100, yPosition));
 
-    refMove.value.left = xPosition + "%";
-    refMove.value.top = yPosition + "%";
+    refMove.value.left = xPosition;
+    refMove.value.top = yPosition;
   };
 
   function onInteractiveClick(event: MouseEvent) {
@@ -83,7 +92,13 @@ function usePointerMove() {
     document.removeEventListener("mouseup", onPointerLeave);
   }
 
-  return { onInteractiveClick, onPointerClick, pointerStyle, refContainer };
+  return {
+    onInteractiveClick,
+    onPointerClick,
+    pointerStyle,
+    refContainer,
+    refMove,
+  };
 }
 </script>
 
