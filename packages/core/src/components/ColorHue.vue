@@ -1,17 +1,29 @@
 <template>
   <div class="vue-colorful-hue">
-    <ColorPointer :override-position="{ top: '50%' }" />
+    <ColorPointer :override-position="{ top: '50%' }" v-model="pointerValue" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { watch } from "vue";
+import { ref, watch } from "vue";
 
 import ColorPointer from "./ColorPointer.vue";
 
-const hueValue = defineModel();
+const hueValue = defineModel<number>();
+const emits = defineEmits<{
+  (e: "change", colors: number): void;
+}>();
+const pointerValue = ref<number[]>([]);
 
-watch(hueValue, () => {});
+watch(pointerValue, () => {
+  const [left] = pointerValue.value;
+  emits("change", Math.round(left * 360));
+});
+
+watch(hueValue, (hue) => {
+  if (hue === undefined) return;
+  const left = Math.round((hue / 360) * 100);
+});
 </script>
 
 <style>

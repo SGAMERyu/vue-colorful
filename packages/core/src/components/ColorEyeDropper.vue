@@ -1,6 +1,11 @@
 <template>
-  <button class="vue-colorful-eyedropper">
+  <button
+    :style="eyedropperStyle"
+    @click="handleCopyColor"
+    class="vue-colorful-eyedropper"
+  >
     <svg
+      @click="changeColor"
       class="vue-colorful-eyedropper__icon"
       fill="currentColor"
       viewBox="0 0 24 24"
@@ -13,7 +18,37 @@
   </button>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useClipboard, useEyeDropper } from "@vueuse/core";
+import { CSSProperties, computed } from "vue";
+
+interface Props {
+  color: string;
+}
+const props = defineProps<Props>();
+const emits = defineEmits<{
+  (e: "onEyeDropper", value: string): void;
+}>();
+const { copy } = useClipboard();
+const { open: openEyeDropper } = useEyeDropper();
+
+const eyedropperStyle = computed<CSSProperties>(() => {
+  return {
+    background: props.color,
+  };
+});
+
+function handleCopyColor() {
+  copy(props.color);
+}
+
+async function changeColor() {
+  const data = await openEyeDropper();
+  if (data) {
+    emits("onEyeDropper", data.sRGBHex);
+  }
+}
+</script>
 
 <style>
 .vue-colorful-eyedropper {
@@ -22,7 +57,6 @@
   align-items: center;
   width: 24px;
   height: 24px;
-  background: red;
   border-radius: 50%;
 }
 

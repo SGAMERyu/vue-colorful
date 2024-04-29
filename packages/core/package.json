@@ -14,5 +14,8 @@
       "import": "./dist/vur-colorful.js",
       "require": "./dist/vur-colorful.umd.cjs"
     }
+  },
+  "dependencies": {
+    "@vueuse/core": "^10.9.0"
   }
 }
