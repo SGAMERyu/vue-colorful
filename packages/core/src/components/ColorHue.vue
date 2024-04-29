@@ -1,6 +1,9 @@
 <template>
   <div class="vue-colorful-hue">
-    <ColorPointer :override-position="{ top: '50%' }" v-model="pointerValue" />
+    <ColorPointer
+      :override-position="{ top: '50%' }"
+      v-model:left="pointerLeft"
+    />
   </div>
 </template>
 
@@ -13,16 +16,15 @@ const hueValue = defineModel<number>();
 const emits = defineEmits<{
   (e: "change", colors: number): void;
 }>();
-const pointerValue = ref<number[]>([]);
+const pointerLeft = ref<number>(0);
 
-watch(pointerValue, () => {
-  const [left] = pointerValue.value;
+watch(pointerLeft, (left) => {
   emits("change", Math.round(left * 360));
 });
 
 watch(hueValue, (hue) => {
-  if (hue === undefined) return;
-  const left = Math.round((hue / 360) * 100);
+  if (typeof hue === "undefined") return;
+  pointerLeft.value = hue / 360;
 });
 </script>
 

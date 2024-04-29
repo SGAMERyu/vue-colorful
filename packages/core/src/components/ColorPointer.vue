@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts" setup>
-import { CSSProperties, computed, ref, watch } from "vue";
+import { CSSProperties, computed, ref } from "vue";
 
 interface Props {
   overridePosition: Record<string, string>;
@@ -27,22 +27,10 @@ const props = withDefaults(defineProps<Props>(), {
   style: () => ({}),
 });
 
-const pointer = defineModel<number[]>();
-const {
-  onInteractiveClick,
-  onPointerClick,
-  pointerStyle,
-  refContainer,
-  refMove,
-} = usePointerMove();
-
-watch(
-  [() => refMove.value.left, () => refMove.value.top],
-  () => {
-    pointer.value = [refMove.value.left, refMove.value.top];
-  },
-  { deep: true },
-);
+const modelLeft = defineModel<number>("left", { default: 0 });
+const modelTop = defineModel<number>("top", { default: 0 });
+const { onInteractiveClick, onPointerClick, pointerStyle, refContainer } =
+  usePointerMove();
 
 const fillStyle = computed(() => {
   return {
@@ -53,17 +41,15 @@ const fillStyle = computed(() => {
 function usePointerMove() {
   const refMove = ref({
     isDrag: false,
-    left: 0,
     startLeft: 0,
     startTop: 0,
-    top: 0,
   });
   const refContainer = ref<HTMLElement | null>();
 
   const pointerStyle = computed(() => {
     return {
-      left: refMove.value.left + "%",
-      top: refMove.value.top + "%",
+      left: modelLeft.value * 100 + "%",
+      top: modelTop.value * 100 + "%",
       ...props.overridePosition,
     };
   });
@@ -72,14 +58,14 @@ function usePointerMove() {
     const { clientX, clientY } = event;
     const { height, left, top, width } =
       refContainer.value!.getBoundingClientRect();
-    let xPosition = ((clientX - left) / width) * 100;
-    let yPosition = ((clientY - top) / height) * 100;
+    let xPosition = (clientX - left) / width;
+    let yPosition = (clientY - top) / height;
 
-    xPosition = Math.max(0, Math.min(100, xPosition));
-    yPosition = Math.max(0, Math.min(100, yPosition));
+    xPosition = Math.max(0, Math.min(1, xPosition));
+    yPosition = Math.max(0, Math.min(1, yPosition));
 
-    refMove.value.left = xPosition;
-    refMove.value.top = yPosition;
+    modelLeft.value = xPosition;
+    modelTop.value = yPosition;
   };
 
   function onInteractiveClick(event: MouseEvent) {

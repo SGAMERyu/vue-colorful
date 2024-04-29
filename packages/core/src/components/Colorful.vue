@@ -1,7 +1,7 @@
 <template>
   <div class="vue-colorful-container" data-vue-colorful>
     <ColorSaturation
-      :saturation-color="hueColor"
+      :saturation-color="saturationColor"
       :select-color="selectColor"
       @change="onSaturationChange"
     />
@@ -27,11 +27,11 @@ defineOptions({
 });
 const rawValue = defineModel<string>();
 const {
-  hueColor,
   initRefHsv,
   onHueChange,
   onSaturationChange,
   refHsv,
+  saturationColor,
   selectColor,
 } = useColorful();
 
@@ -49,17 +49,15 @@ function useColorful() {
     s: 0,
     v: 0,
   });
+  const saturationColor = ref("");
 
   const selectColor = computed(() => {
     return convertHsvToRgba(refHsv.value);
   });
 
-  const hueColor = computed(() => {
-    return convertHsvToRgba(refHsv.value);
-  });
-
   function initRefHsv(rawColor: string) {
     refHsv.value = convertHexToHsv(rawColor);
+    saturationColor.value = convertHsvToRgba(refHsv.value);
   }
 
   function onSaturationChange([s, v]: number[]) {
@@ -69,14 +67,15 @@ function useColorful() {
 
   function onHueChange(h: number) {
     refHsv.value.h = h;
+    saturationColor.value = convertHsvToRgba(refHsv.value);
   }
 
   return {
-    hueColor,
     initRefHsv,
     onHueChange,
     onSaturationChange,
     refHsv,
+    saturationColor,
     selectColor,
   };
 }

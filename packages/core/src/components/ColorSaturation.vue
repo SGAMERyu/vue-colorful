@@ -1,6 +1,10 @@
 <template>
   <div :style="panelStyle" class="vue-colorful-saturation" ref="container">
-    <ColorPointer :style="pointerStyle" v-model="pointerValue" />
+    <ColorPointer
+      :style="pointerStyle"
+      v-model:left="pointerLeft"
+      v-model:top="pointerTop"
+    />
   </div>
 </template>
 
@@ -17,11 +21,14 @@ const props = defineProps<Props>();
 const emits = defineEmits<{
   (e: "change", colors: number[]): void;
 }>();
-const pointerValue = ref([]);
+const pointerLeft = ref(0);
+const pointerTop = ref(0);
 
-watch(pointerValue, () => {
-  const [left, top] = pointerValue.value;
-  emits("change", [Math.round(left), Math.round(100 - top)]);
+watch([() => pointerLeft.value, () => pointerTop.value], () => {
+  emits("change", [
+    Math.round(pointerLeft.value * 100),
+    Math.round((1 - pointerTop.value) * 100),
+  ]);
 });
 
 const panelStyle = computed<CSSProperties>(() => {
