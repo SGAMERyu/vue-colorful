@@ -2,21 +2,34 @@
   <div class="vue-colorful-hue">
     <ColorPointer
       :override-position="{ top: '50%' }"
+      :style="pointerStyle"
       v-model:left="pointerLeft"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { CSSProperties, computed, ref, watch } from "vue";
 
 import ColorPointer from "./ColorPointer.vue";
+
+interface Props {
+  selectColor: string;
+}
+
+const props = defineProps<Props>();
 
 const hueValue = defineModel<number>();
 const emits = defineEmits<{
   (e: "change", colors: number): void;
 }>();
 const pointerLeft = ref<number>(0);
+
+const pointerStyle = computed<CSSProperties>(() => {
+  return {
+    backgroundColor: props.selectColor,
+  };
+});
 
 watch(pointerLeft, (left) => {
   emits("change", Math.round(left * 360));

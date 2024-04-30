@@ -10,8 +10,12 @@
         <ColorEyeDropper :color="selectColor" @on-eye-dropper="initRefHsv" />
       </div>
       <div class="vue-colorful-control_tool">
-        <ColorHue @change="onHueChange" v-model="refHsv.h" />
-        <ColorAlpha v-model="refHsv.v" />
+        <ColorHue
+          :select-color="selectColor"
+          @change="onHueChange"
+          v-model="refHsv.h"
+        />
+        <ColorAlpha :select-color="selectColor" @change="onAlphaChange" />
       </div>
     </div>
   </div>
@@ -28,6 +32,7 @@ defineOptions({
 const rawValue = defineModel<string>();
 const {
   initRefHsv,
+  onAlphaChange,
   onHueChange,
   onSaturationChange,
   refHsv,
@@ -50,9 +55,10 @@ function useColorful() {
     v: 0,
   });
   const saturationColor = ref("");
+  const alphaColor = ref(1);
 
   const selectColor = computed(() => {
-    return convertHsvToRgba(refHsv.value);
+    return convertHsvToRgba(refHsv.value, alphaColor.value);
   });
 
   function initRefHsv(rawColor: string) {
@@ -70,8 +76,13 @@ function useColorful() {
     saturationColor.value = convertHsvToRgba(refHsv.value);
   }
 
+  function onAlphaChange(a: number) {
+    alphaColor.value = a;
+  }
+
   return {
     initRefHsv,
+    onAlphaChange,
     onHueChange,
     onSaturationChange,
     refHsv,

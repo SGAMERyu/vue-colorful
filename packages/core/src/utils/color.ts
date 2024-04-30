@@ -76,3 +76,15 @@ export function convertHsvToRgba(hsv: HSVColor, a: number = 1): string {
   const [r, g, b] = hsvToRgb(hsv);
   return `rgba(${r}, ${g}, ${b}, ${a})`;
 }
+
+export function extractRGBAValues(color: string) {
+  const rgba = color.match(/^rgba\((\d+),\s*(\d+),\s*(\d+),\s*(\d?\.?\d+)\)$/);
+  return rgba
+    ? {
+        a: parseFloat(rgba[4]),
+        b: parseInt(rgba[3], 10),
+        g: parseInt(rgba[2], 10),
+        r: parseInt(rgba[1], 10),
+      }
+    : null;
+}
