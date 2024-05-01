@@ -5,17 +5,19 @@
       :select-color="selectColor"
       @change="onSaturationChange"
     />
-    <div class="vue-colorful-control">
-      <div class="vue-colorful-control_eyedropper">
+    <div class="vue-colorful-control_tool">
+      <ColorHue
+        :select-color="selectColor"
+        @change="onHueChange"
+        v-model="refHsv.h"
+      />
+      <ColorAlpha :select-color="selectColor" @change="onAlphaChange" />
+      <div class="vue-colorful-last-control">
+        <ColorDisplay :select-color="selectColor"></ColorDisplay>
+        <div class="vue-color-ful-flex">
+          <ColorInput :select-color="selectColor"></ColorInput>
+        </div>
         <ColorEyeDropper :color="selectColor" @on-eye-dropper="initRefHsv" />
-      </div>
-      <div class="vue-colorful-control_tool">
-        <ColorHue
-          :select-color="selectColor"
-          @change="onHueChange"
-          v-model="refHsv.h"
-        />
-        <ColorAlpha :select-color="selectColor" @change="onAlphaChange" />
       </div>
     </div>
   </div>
@@ -106,8 +108,10 @@ function useColorful() {
   gap: 14px;
 }
 
-.vue-colorful-control_eyedropper {
-  flex: 0 1 24px;
+.vue-colorful-last-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .vue-colorful-control_tool {
@@ -116,5 +120,9 @@ function useColorful() {
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+.vue-color-ful-flex {
+  flex: 1;
 }
 </style>

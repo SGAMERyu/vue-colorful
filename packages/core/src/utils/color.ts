@@ -88,3 +88,14 @@ export function extractRGBAValues(color: string) {
       }
     : null;
 }
+
+export function rgbaToHex(rgba: any) {
+  let [r, g, b, a] = rgba.match(/\d+/g).map(Number); // 提取出rgba中的r, g, b, a值
+  r = r.toString(16).padStart(2, "0"); // 转换为16进制并补全2位
+  g = g.toString(16).padStart(2, "0"); // 转换为16进制并补全2位
+  b = b.toString(16).padStart(2, "0"); // 转换为16进制并补全2位
+  a = Math.round(a * 255)
+    .toString(16)
+    .padStart(2, "0"); // 将透明度转换为0~255的整数，然后再转换为16进制并补全2位
+  return "#" + r + g + b + a; // 合成hex颜色
+}
