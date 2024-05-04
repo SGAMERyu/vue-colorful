@@ -1,13 +1,13 @@
 <template>
   <div class="vue-colorful-input__container">
-    <input class="vue-colorful-input" v-model="refText" />
+    <input @input="onInput" class="vue-colorful-input" v-model="refText" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, watch } from "vue";
 
-import { isValidHexColor, rgbaToGroupHex } from "../utils/color";
+import { isValidHexColor, rgbaToHex } from "../utils/color";
 
 interface Props {
   selectColor: string;
@@ -18,21 +18,22 @@ const emits = defineEmits<{
   (e: "change", color: string): void;
 }>();
 const refText = ref("");
+
 watch(
   () => props.selectColor,
   () => {
-    const [hexText] = rgbaToGroupHex(props.selectColor);
+    const hexText = rgbaToHex(props.selectColor);
     if (hexText === refText.value) return;
     refText.value = hexText;
   },
   { immediate: true },
 );
 
-watch(refText, (value) => {
-  const isValid = isValidHexColor(value);
+function onInput() {
+  const isValid = isValidHexColor(refText.value);
   if (!isValid) return;
-  emits("change", value);
-});
+  emits("change", refText.value);
+}
 </script>
 
 <style>
