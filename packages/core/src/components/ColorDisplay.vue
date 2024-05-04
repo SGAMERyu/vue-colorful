@@ -26,7 +26,7 @@ const displayStyle = computed<CSSProperties>(() => {
 .vue-colorful-display {
   width: 24px;
   height: 24px;
-  border-radius: 8px;
+  border-radius: 4px;
   cursor: pointer;
 }
 </style>

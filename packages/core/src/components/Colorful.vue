@@ -15,7 +15,10 @@
       <div class="vue-colorful-last-control">
         <ColorDisplay :select-color="selectColor"></ColorDisplay>
         <div class="vue-color-ful-flex">
-          <ColorInput :select-color="selectColor"></ColorInput>
+          <ColorInput
+            :select-color="selectColor"
+            @change="initRefHsv"
+          ></ColorInput>
         </div>
         <ColorEyeDropper :color="selectColor" @on-eye-dropper="initRefHsv" />
       </div>
