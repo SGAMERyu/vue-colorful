@@ -1,6 +1,7 @@
 <template>
-  <div class="w-screen h-screen flex items-center justify-center">
+  <div class="w-screen h-screen flex items-center justify-center gap-[72px]">
     <div class="w-[200px]"><VueColorful v-model="color" /></div>
+    <div class="w-[400px]"><VueColorGradient v-model="gradients" /></div>
   </div>
 </template>
 
@@ -8,4 +9,5 @@
 import { ref } from "vue";
 
 const color = ref("#ff0000");
+const gradients = ref(["#6b6b89", "#3b3bbf"]);
 </script>
