@@ -4,6 +4,7 @@
       :style="pickerStyle"
       @click="addPointer"
       class="vue-colorful-gradient__picker"
+      ref="refPointer"
     ></div>
     <div
       :key="index"
@@ -15,18 +16,31 @@
 </template>
 
 <script lang="ts" setup>
-import { CSSProperties, computed } from "vue";
+import { CSSProperties, computed, ref } from "vue";
+
+import { lightenDarkenColor } from "../utils/color";
 
 const gradients = defineModel<string[]>();
-
+const refPointer = ref<HTMLElement | null>(null);
 const pickerStyle = computed<CSSProperties>(() => {
   return {
     backgroundImage: `linear-gradient(90deg, ${gradients.value!.join(",")})`,
   };
 });
 
-function addPointer() {
-  gradients.value?.push(gradients.value[gradients.value.length - 1]);
+function addPointer(event: MouseEvent) {
+  const rect = refPointer.value!.getBoundingClientRect();
+  const percent = (event.clientX - rect.left) / rect.width;
+  const gradientLength = gradients.value!.length;
+  const index = Math.floor(gradientLength * percent);
+  const midIndex = Math.floor(gradientLength / 2);
+  if (index < midIndex) {
+    gradients.value?.splice(index + 1, 0, gradients.value[0]);
+  } else {
+    console.log(midIndex);
+    const newGradient = lightenDarkenColor(gradients.value![midIndex], 0.2);
+    gradients.value?.splice(midIndex, 0, newGradient);
+  }
 }
 </script>
 

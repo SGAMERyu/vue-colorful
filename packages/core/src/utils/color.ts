@@ -104,3 +104,23 @@ export function isValidHexColor(color: string) {
   const hexColorPattern = /^#[0-9a-f]{6}$/i;
   return hexColorPattern.test(color);
 }
+
+export function lightenDarkenColor(hex: string, lum: number) {
+  // 验证颜色格式
+  if (hex.length !== 7 || hex[0] !== "#") {
+    throw new Error("Invalid color format");
+  }
+
+  let newHex = "#";
+
+  for (let i = 1; i < 7; i += 2) {
+    // 分别处理 RGB
+    let decimalColorValue: number | string = parseInt(hex.slice(i, i + 2), 16); //转为十进制
+    decimalColorValue = Math.round(
+      Math.min(Math.max(0, decimalColorValue + decimalColorValue * lum), 255),
+    ).toString(16); // 调整亮度之后保证在 0 到 255 范围内，并转回十六进制
+    newHex += ("00" + decimalColorValue).substr(decimalColorValue.length); //确保是2位数
+  }
+
+  return newHex;
+}
