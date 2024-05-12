@@ -61,5 +61,6 @@ function onPointerClick() {
   padding: 16px;
   border-radius: 16px;
   box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  z-index: 4;
 }
 </style>

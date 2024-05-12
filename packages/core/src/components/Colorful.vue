@@ -27,7 +27,6 @@
 </template>
 
 <script setup lang="ts">
-import { watchOnce } from "@vueuse/core";
 import { computed, ref, watch } from "vue";
 
 import { convertHexToHsv, convertHsvToRgba, rgbaToHex } from "../utils/color";
