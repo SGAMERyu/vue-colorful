@@ -6,12 +6,12 @@
       class="vue-colorful-gradient__picker"
       ref="refPointer"
     ></div>
-    <div
+    <GradientPointer
+      :color="gradient"
       :key="index"
-      :style="{ background: gradient }"
-      class="vue-colorful-gradient__pointer"
+      @change="(color) => changeGradient(color, index)"
       v-for="(gradient, index) in gradients"
-    ></div>
+    />
   </div>
 </template>
 
@@ -19,9 +19,12 @@
 import { CSSProperties, computed, ref } from "vue";
 
 import { lightenDarkenColor } from "../utils/color";
+import GradientPointer from "./GradientPointer.vue";
 
 const gradients = defineModel<string[]>();
+
 const refPointer = ref<HTMLElement | null>(null);
+
 const pickerStyle = computed<CSSProperties>(() => {
   return {
     backgroundImage: `linear-gradient(90deg, ${gradients.value!.join(",")})`,
@@ -37,10 +40,13 @@ function addPointer(event: MouseEvent) {
   if (index < midIndex) {
     gradients.value?.splice(index + 1, 0, gradients.value[0]);
   } else {
-    console.log(midIndex);
     const newGradient = lightenDarkenColor(gradients.value![midIndex], 0.2);
     gradients.value?.splice(midIndex, 0, newGradient);
   }
+}
+
+function changeGradient(color: string, index: number) {
+  gradients.value![index] = color;
 }
 </script>
 
@@ -62,12 +68,5 @@ function addPointer(event: MouseEvent) {
   cursor: pointer;
   border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 100px;
-}
-
-.vue-colorful-gradient__pointer {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  z-index: 2;
 }
 </style>
