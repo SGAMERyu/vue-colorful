@@ -1,7 +1,8 @@
 <template>
-  <div class="w-screen h-screen flex items-center justify-center gap-[72px]">
+  <div class="w-screen h-screen flex items-center justify-center gap-[24px]">
     <div class="w-[200px]"><VueColorful v-model="color" /></div>
     <div class="w-[400px]"><VueColorGradient v-model="gradients" /></div>
+    <div class="w-[50px]"><VueColorAngle v-model="gradients" /></div>
   </div>
 </template>
 
