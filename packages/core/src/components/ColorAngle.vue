@@ -1,5 +1,9 @@
 <template>
-  <div class="vue-colorful-angle-container">
+  <div
+    @mouseenter="onMouseEnter"
+    class="vue-colorful-angle-container"
+    ref="refAngleContainer"
+  >
     <span
       :key="i"
       :style="genTransform(i)"
@@ -13,6 +17,43 @@
 </template>
 
 <script lang="ts" setup>
+import { useEventListener } from "@vueuse/core";
+import { ref } from "vue";
+
+const refAngleContainer = ref<HTMLElement | null>();
+const refPosition = ref({
+  centerX: 0,
+  centerY: 0,
+});
+
+function onMouseEnter() {
+  const { height, left, top, width } =
+    refAngleContainer.value!.getBoundingClientRect();
+  const centerX = left + width / 2;
+  const centerY = top + height / 2;
+  refPosition.value = {
+    centerX,
+    centerY,
+  };
+  useEventListener(window, "mousemove", calculateAngle);
+}
+
+function calculateAngle(e: MouseEvent): number {
+  const { centerX, centerY } = refPosition.value;
+  const x = e.clientX - centerX;
+  const y = e.clientY - centerY;
+  const angleInRadians = Math.atan2(y, x);
+
+  // 将弧度转换为角度
+  let angleInDegrees = angleInRadians * (180 / Math.PI);
+
+  // 保证角度为正值
+  angleInDegrees = angleInDegrees < 0 ? angleInDegrees + 360 : angleInDegrees;
+  console.log(angleInDegrees);
+
+  return angleInDegrees;
+}
+
 function genTransform(i: number) {
   return {
     transform: `rotate(${15 * i}deg)`,
