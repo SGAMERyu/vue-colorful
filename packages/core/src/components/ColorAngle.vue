@@ -1,6 +1,6 @@
 <template>
   <div
-    @mouseenter="onMouseEnter"
+    @click="onClick"
     class="vue-colorful-angle-container"
     ref="refAngleContainer"
   >
@@ -12,46 +12,82 @@
     >
       <i></i>
     </span>
-    <span class="vue-colorful-angle-display">270</span>
+    <span class="vue-colorful-angle-display">{{ refAngle }}°</span>
+    <span
+      :style="{ transform: `rotate(${refAngle}deg)` }"
+      @mousedown="onMouseDown"
+      class="vue-colorful-angle-pointer"
+    >
+      <i></i>
+    </span>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { useEventListener } from "@vueuse/core";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 
+const refAngle = defineModel<number>();
 const refAngleContainer = ref<HTMLElement | null>();
 const refPosition = ref({
   centerX: 0,
   centerY: 0,
 });
+const refIsDrag = ref(false);
 
-function onMouseEnter() {
+onMounted(() => {
+  genCenter();
+});
+
+function genCenter() {
+  const { scrollX, scrollY } = window;
   const { height, left, top, width } =
     refAngleContainer.value!.getBoundingClientRect();
-  const centerX = left + width / 2;
-  const centerY = top + height / 2;
+  const centerX = left + scrollX + window.scrollX + width / 2;
+  const centerY = top + scrollY + height / 2;
   refPosition.value = {
     centerX,
     centerY,
   };
-  useEventListener(window, "mousemove", calculateAngle);
 }
 
-function calculateAngle(e: MouseEvent): number {
+function onClick(event: MouseEvent) {
+  if (refIsDrag.value) return;
+  calculateAngle(event);
+}
+
+function onMouseDown() {
+  refIsDrag.value = true;
+  const cleanupMouseMove = useEventListener(
+    window,
+    "mousemove",
+    calculateAngle,
+  );
+  useEventListener(window, "mouseup", () => {
+    refIsDrag.value = false;
+    cleanupMouseMove();
+  });
+}
+
+function calculateAngle(event: MouseEvent) {
+  const clickX = event.clientX + window.scrollX;
+  const clickY = event.clientY + window.scrollY;
   const { centerX, centerY } = refPosition.value;
-  const x = e.clientX - centerX;
-  const y = e.clientY - centerY;
-  const angleInRadians = Math.atan2(y, x);
 
-  // 将弧度转换为角度
-  let angleInDegrees = angleInRadians * (180 / Math.PI);
+  // 计算夹角
+  let diffX = clickX - centerX;
+  let diffY = clickY - centerY;
 
-  // 保证角度为正值
-  angleInDegrees = angleInDegrees < 0 ? angleInDegrees + 360 : angleInDegrees;
-  console.log(angleInDegrees);
+  const radians = Math.atan2(diffY, diffX); // radians
+  let angle = (radians * (180 / Math.PI) + 90) % 360;
 
-  return angleInDegrees;
+  // 由于Math.atan2返回的结果是-180到180，我们把负值转化成正值
+  if (angle < 0) angle += 360;
+
+  // 取整来获得整数的角度
+  const scale = 15;
+  const scaledAngle = Math.round(angle / scale) * scale;
+  refAngle.value = scaledAngle;
 }
 
 function genTransform(i: number) {
@@ -78,7 +114,7 @@ function genTransform(i: number) {
   > i {
     height: 4px;
     width: 1px;
-    background: #e2e8f0;
+    background: #bac1cc;
     position: absolute;
     left: 0px;
     right: 0px;
@@ -96,5 +132,28 @@ function genTransform(i: number) {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  color: 14px;
+}
+
+.vue-colorful-angle-pointer {
+  height: 48px;
+  width: 8px;
+  position: absolute;
+  inset: 0px;
+  margin: auto;
+  > i {
+    width: 8px;
+    height: 8px;
+    background: #cbd5e0;
+    display: inline-block;
+    border-radius: 50%;
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: -4px;
+    margin: auto;
+    cursor: pointer;
+    transition: all 0.5s ease-out 0s;
+  }
 }
 </style>
